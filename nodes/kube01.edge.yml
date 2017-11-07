@@ -1,13 +1,7 @@
 classes:
-#- system.linux.system.single
-- cluster.k8s-compact
-#parameters:
-#  _param:
-#    linux_system_codename: xenial
-#    apt_mk_version: nightly
-#    salt_master_host: 127.0.0.1
-#    single_address: 127.0.0.1
-#  linux:
-#    system:
-#      name: kube01
-#      domain: edge
+- cluster.k8s-compact.infra
+- cluster.k8s-compact.kubernetes.control
+parameters:
+  _param:
+    linux_system_codename: xenial
+    single_address: 192.168.122.194
