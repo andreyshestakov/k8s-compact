@@ -1,0 +1,32 @@
+classes:
+- system.linux.system.single
+- system.linux.system.repo.ubuntu
+- system.linux.system.repo.mcp.salt
+- system.salt.master.pkg
+- system.salt.minion.ca.salt_master
+- system.salt.master.api
+#- system.salt.minion.cert.k8s_server
+- system.reclass.storage.salt
+#- system.reclass.storage.system.kubernetes_control_cluster
+- cluster.k8s-compact.kubernetes
+parameters:
+  _param:
+    salt_master_base_environment: prd
+    salt_api_password_hash: "$6$WV0P1shnoDh2gI/Z$22/Bcd7ffMv0jDlFpT63cAU4PiXHz9pjXwngToKwqAsgoeK4HNR3PiKaushjxp3JsQ8hNoJmAC6TxzVqfV8WH/"
+    salt_master_host: 127.0.0.1
+    salt_master_environment_revision: master
+    salt_master_environment_repository: 'https://github.com/salt-formulas'
+    reclass_data_repository: "https://github.com/andreyshestakov/k8s-compact"
+    reclass_data_revision: master
+    reclass_config_master: 127.0.0.1
+  openssh:
+    server:
+      password_auth: true
+      permit_root_login: true
+  linux:
+    system:
+      user:
+        root:
+          enabled: true
+          # r00tme
+          password: $6$9ojWyyN.$26Vj46JtCUL6C7XBQ8RmQTZLwo8/8SkqTRElXh0X2YBLrt7E/aVe2AYQ5gguYUwUknZNOSn5q7M9M3Jyf2gof/
