@@ -1,32 +1,120 @@
 classes:
 - system.linux.system.single
 - system.linux.system.repo.ubuntu
+- system.linux.system.repo.mcp.extra
 - system.linux.system.repo.mcp.salt
+- system.linux.network.hosts
 - system.salt.master.pkg
 - system.salt.minion.ca.salt_master
 - system.salt.master.api
-#- system.salt.minion.cert.k8s_server
+- system.salt.minion.cert.k8s_server_single
+- system.salt.minion.cert.etcd_client
+- system.salt.minion.cert.k8s_client_single
 - system.reclass.storage.salt
-#- system.reclass.storage.system.kubernetes_control_cluster
 - cluster.k8s-compact.kubernetes
 parameters:
   _param:
+    primary_interface: ens3
+    single_address: 192.168.122.194
+    infra_config_hostname: kube01
+    cluster_domain: edge
+    linux_system_codename: xenial
+    apt_mk_version: nightly
     salt_master_base_environment: prd
     salt_api_password_hash: "$6$WV0P1shnoDh2gI/Z$22/Bcd7ffMv0jDlFpT63cAU4PiXHz9pjXwngToKwqAsgoeK4HNR3PiKaushjxp3JsQ8hNoJmAC6TxzVqfV8WH/"
-    salt_master_host: 127.0.0.1
+    salt_master_host: 192.168.122.194
     salt_master_environment_revision: master
     salt_master_environment_repository: 'https://github.com/salt-formulas'
+    salt_minion_ca_host: ${_param:infra_config_hostname}.${_param:cluster_domain}
+    salt_minion_ca_authority: salt_master_ca
     reclass_data_repository: "https://github.com/andreyshestakov/k8s-compact"
     reclass_data_revision: master
-    reclass_config_master: 127.0.0.1
+    reclass_config_master: 192.168.122.194
+    # k8s_certs
+    control_address: 192.168.122.194
+    kubernetes_internal_api_address: 10.254.0.1
+    cluster_name: kube01.edge
+    kubernetes_control_node01_address: 192.168.122.194
+    # etcd_certs
+    cluster_local_address: 192.168.122.194
+    # etcd
+    etcd_initial_token: IN7KaRMSo3xkGxkjAAPtkRkAgqN4ZNRq
+    node_address: 192.168.122.194
+    node_hostname: kube01
+    node_port: 4001
+    # k8s
+    kubernetes_admin_user: admin
+    kubernetes_admin_password: sbPfel23ZigJF3Bm
+    kubernetes_admin_token: PpP6Mm3pAoPVqcKOKUu0x1dh7b1959Fi
+    kubernetes_kubelet_token: JJ2PKHxjiU6EYvIt18BqwdSK1HvWh8pt
+    kubernetes_kube-proxy_token: jT0hJk9L6cIw5UpYDNhsRwcj3Z2n62B6
+    kubernetes_scheduler_token: VgkUHfrW07zNxrb0ucFyX7NBnSJN9Xp6
+    kubernetes_controller-manager_token: uXrdZ1YKF6qlYm3sHje2iEXMGAGDWOIU
+    kubernetes_dns_token: 0S1I4iJeFjq5fopPwwCwTp3xFpEZfeUl
+    kubernetes_docker_package: docker-engine=1.12.6-0~ubuntu-xenial
+
+
+   # component docker images
+    kubernetes_calicoctl_image: docker-dev-virtual.docker.mirantis.net/mirantis/projectcalico/calico/ctl:latest
+    kubernetes_calico_image: docker-dev-virtual.docker.mirantis.net/mirantis/projectcalico/calico/node:latest
+    kubernetes_calico_cni_image: docker-dev-virtual.docker.mirantis.net/mirantis/projectcalico/calico/cni:latest
+    kubernetes_calico_policy_image: calico/kube-policy-controller:v0.5.4
+    kubernetes_hyperkube_image: docker-dev-virtual.docker.mirantis.net/mirantis/kubernetes/hyperkube-amd64:v1.7.8-3
+    kubernetes_virtlet_image: mirantis/virtlet:latest
+    kubernetes_netchecker_agent_image: mirantis/k8s-netchecker-agent:stable
+    kubernetes_netchecker_server_image: mirantis/k8s-netchecker-server:stable
+    kubernetes_netchecker_agent_probeurls: "http://ipinfo.io"
+    # switches of addons
+    kubernetes_addon_namespace: kube-system
+    kubernetes_dashboard: false
+    kubernetes_helm_enabled: false
+    kubernetes_netchecker_enabled: true
+    kubernetes_calico_policy_enabled: false
+    kubernetes_virtlet_enabled: true
+    # etcd calico
+    calico_private_network: 192.168.0.0
+    calico_private_netmask: 16
+    # k8s compute
+    master_address: 192.168.122.194
   openssh:
     server:
       password_auth: true
       permit_root_login: true
   linux:
+    network:
+      host:
+        kube01:
+          address: 192.168.122.194
+          names:
+          - kube01
+          - kube01.edge
+      resolv:
+        dns:
+          - 10.254.0.10
+          - 172.18.176.4
+          - 172.18.176.7
+      interface:
+        ens3:
+          enabled: true
+          type: eth
+          proto: static
+          name: ${_param:primary_interface}
+          address: ${_param:single_address}
+          netmask: 255.255.255.0
+          gateway: 192.168.122.1
+          route:
+            kubernetes_services:
+              address: 10.254.0.0
+              netmask: 255.255.0.0
+              gateway: ${_param:single_address}
     system:
+      name: kube01
+      domain: edge
       user:
         root:
           enabled: true
           # r00tme
           password: $6$9ojWyyN.$26Vj46JtCUL6C7XBQ8RmQTZLwo8/8SkqTRElXh0X2YBLrt7E/aVe2AYQ5gguYUwUknZNOSn5q7M9M3Jyf2gof/
+  salt:
+    master:
+      worker_threads: 3
