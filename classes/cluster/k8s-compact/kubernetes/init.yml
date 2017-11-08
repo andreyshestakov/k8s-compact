@@ -14,7 +14,7 @@ parameters:
     node_hostname: ${_param:infra_config_hostname}
     node_port: 4001
 
-    calico_private_network: 192.168.0.0
+    calico_private_network: 10.1.0.0
     calico_private_netmask: 16
 
     kubernetes_admin_user: admin
