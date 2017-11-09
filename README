@@ -4,10 +4,11 @@ add-apt-repository http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3
 add-apt-repository "deb [arch=amd64] http://apt-mk.mirantis.com/xenial nightly salt"
 apt update
 apt install -y salt-master salt-minion reclass make
+apt install -y salt-formula-linux salt-formula-reclass salt-formula-salt salt-formula-openssh salt-formula-ntp salt-formula-git salt-formula-docker salt-formula-etcd salt-formula-kubernetes
 
 rm /etc/salt/minion_id
 rm -f /etc/salt/pki/minion/minion_master.pub
-echo "id: all01.local" > /etc/salt/minion
+echo "id: kube01.edge" > /etc/salt/minion
 echo "master: localhost" >> /etc/salt/minion
 
 [ ! -d /etc/salt/master.d ] && mkdir -p /etc/salt/master.d
@@ -37,15 +38,9 @@ EOF
 service salt-master restart
 service salt-minion restart
 
-git clone https://gerrit.mcp.mirantis.net/p/salt-models/mcp-virtual-aio.git /srv/salt/reclass
+git clone https://github.com/andreyshestakov/k8s-compact /srv/salt/reclass
 cd /srv/salt/reclass
 git clone https://gerrit.mcp.mirantis.net/p/salt-models/reclass-system.git classes/system
-
-declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "docker" "etcd" "kubernetes")
-for formula_service in "${formula_services[@]}"; do
-  apt install -y salt-formula-"${formula_service}"
-done
-
 mkdir classes/service
 ln -s /usr/share/salt-formulas/reclass/service/* classes/service/
 
