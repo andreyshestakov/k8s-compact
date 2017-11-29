@@ -24,6 +24,8 @@ parameters:
   kubernetes:
     common:
       addons:
+        dns:
+          server: 10.201.0.10
         dashboard:
           enabled: ${_param:kubernetes_dashboard}
         helm:
@@ -43,6 +45,10 @@ parameters:
           image: ${_param:kubernetes_externaldns_image}
           provider: ${_param:kubernetes_externaldns_provider}
     master:
+      service_addresses: 10.201.0.0/16
+      addons:
+        dns:
+          server: 10.201.0.10
       kubelet:
         address: ${_param:single_address}
       etcd:

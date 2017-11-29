@@ -4,4 +4,4 @@ classes:
 parameters:
   _param:
     linux_system_codename: xenial
-    single_address: 192.168.122.194
+    single_address: 192.168.122.75

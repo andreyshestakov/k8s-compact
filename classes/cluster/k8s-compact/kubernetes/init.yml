@@ -3,7 +3,7 @@ classes:
 parameters:
   _param:
     control_address: ${_param:single_address}
-    kubernetes_internal_api_address: 10.254.0.1
+    kubernetes_internal_api_address: 10.201.0.1
     cluster_name: ${_param:infra_config_hostname}.${_param:cluster_domain}
     kubernetes_control_node01_address: ${_param:single_address}
     cluster_local_address: ${_param:single_address}
@@ -14,7 +14,7 @@ parameters:
     node_hostname: ${_param:infra_config_hostname}
     node_port: 4001
 
-    calico_private_network: 10.1.0.0
+    calico_private_network: 10.10.0.0
     calico_private_netmask: 16
 
     kubernetes_admin_user: admin
@@ -30,7 +30,7 @@ parameters:
     kubernetes_calico_image: docker-dev-virtual.docker.mirantis.net/mirantis/projectcalico/calico/node:latest
     kubernetes_calico_cni_image: docker-dev-virtual.docker.mirantis.net/mirantis/projectcalico/calico/cni:latest
     kubernetes_calico_policy_image: calico/kube-policy-controller:v0.5.4
-    kubernetes_hyperkube_image: docker-dev-virtual.docker.mirantis.net/mirantis/kubernetes/hyperkube-amd64:v1.7.8-3
+    kubernetes_hyperkube_image: docker-dev-local.docker.mirantis.net/mirantis/kubernetes/hyperkube-amd64:v1.8.4-beta.0-53_1510914834668
     kubernetes_virtlet_image: mirantis/virtlet:latest
     kubernetes_netchecker_agent_image: mirantis/k8s-netchecker-agent:stable
     kubernetes_netchecker_server_image: mirantis/k8s-netchecker-server:stable
@@ -40,8 +40,8 @@ parameters:
     kubernetes_addon_namespace: kube-system
     kubernetes_dashboard: false
     kubernetes_helm_enabled: false
-    kubernetes_netchecker_enabled: true
+    kubernetes_netchecker_enabled: false
     kubernetes_calico_policy_enabled: false
-    kubernetes_virtlet_enabled: true
+    kubernetes_virtlet_enabled: false
     kubernetes_coredns_enabled: false
     kubernetes_externaldns_enabled: false

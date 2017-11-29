@@ -9,6 +9,7 @@ classes:
 parameters:
   kubernetes:
     pool:
+      cluster_dns: 10.201.0.10
       kubelet:
         address: ${_param:single_address}
       network:
@@ -42,7 +43,7 @@ parameters:
     network:
       resolv:
         dns:
-          - 10.254.0.10
+          - 10.201.0.10
           - 172.18.176.4
           - 172.18.176.7
       interface:
@@ -56,6 +57,6 @@ parameters:
           gateway: 192.168.122.1
           route:
             kubernetes_services:
-              address: 10.254.0.0
+              address: 10.201.0.0
               netmask: 255.255.0.0
               gateway: ${_param:single_address}
