@@ -4,6 +4,7 @@ parameters:
   _param:
     control_address: ${_param:single_address}
     kubernetes_internal_api_address: 10.201.0.1
+    kubernetes_internal_dns_address: 10.201.0.10
     cluster_name: ${_param:infra_config_hostname}.${_param:cluster_domain}
     kubernetes_control_node01_address: ${_param:single_address}
     cluster_local_address: ${_param:single_address}
@@ -42,6 +43,6 @@ parameters:
     kubernetes_helm_enabled: false
     kubernetes_netchecker_enabled: false
     kubernetes_calico_policy_enabled: false
-    kubernetes_virtlet_enabled: false
+    kubernetes_virtlet_enabled: true
     kubernetes_coredns_enabled: false
     kubernetes_externaldns_enabled: false
