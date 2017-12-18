@@ -32,3 +32,15 @@ parameters:
   salt:
     master:
       worker_threads: 3
+  reclass:
+    storage:
+      class_mapping:
+        common_node:
+          expression: all
+          node_param:
+            single_address:
+              value_template: <<node_control_ip>>
+            linux_system_codename:
+              value_template: <<node_os>>
+            salt_master_host:
+              value_template: <<node_master_ip>>
